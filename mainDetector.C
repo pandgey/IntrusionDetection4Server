@@ -72,10 +72,26 @@ int main() {
 
             // check for alerts
 
-            // check for icmp
             if (strstr(lower_buffer, "icmp")) {
                 printf("ICMP Alert\n");
                 write(serial_fd, "I", 1);
+            }
+
+            else if (strstr(lower_buffer, "http")) {
+                printf("HTTP Alert\n");
+                write(serial_fd, "H", 1);
+            }
+            else if (strstr(lower_buffer, "syn")) {
+                printf("SYN Flood\n");
+                write(serial_fd, "S", 1);
+            }
+            else if (strstr(lower_buffer, "fin")) {
+                printf("FIN Flood\n");
+                write(serial_fd, "F", 1);
+            }
+            else if (strstr(lower_buffer, "rst")) {
+                printf("RST Flood\n");
+                write(serial_fd, "R", 1);
             }
 
             free(buffer);

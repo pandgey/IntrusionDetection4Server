@@ -44,6 +44,7 @@ int main() {
     sleep(2);
 
     // then again this is to tell the board that it should be ready
+    // set to 6 because the word ready is 6 bits, including new line
     write(serial_fd, "READY\n", 6);
     printf("The detector is up and running!\n");
 

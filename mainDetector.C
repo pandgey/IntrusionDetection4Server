@@ -8,6 +8,8 @@
 #include <ctype.h>
 
 int main() {
+
+    // declare each variables
     int serial_fd;
     struct termios tty;
     FILE * file;
@@ -81,17 +83,58 @@ int main() {
                 printf("HTTP Alert\n");
                 write(serial_fd, "H", 1);
             }
+
+            else if (strstr(lower_buffer, "dns")) {
+                printf("DNS Alert\n");
+                write(serial_fd, "D", 1);
+            }
+
+            else if (strstr(lower_buffer, "ftp")) {
+                printf("FTP Alert\n");
+                write(serial_fd, "F1", 1);
+            }
+
+            else if (strstr(lower_buffer, "ssh")) {
+                printf("SSH Alert\n");
+                write(serial_fd, "S1", 1);
+            }
+            
+            else if (strstr(lower_buffer, "telnet")) {
+                printf("TELNET Alert\n");
+                write(serial_fd, "T", 1);
+            }
+
+            else if (strstr(lower_buffer, "login failed") || strstr(lower_buffer, "authentication failure")) {
+                printf("Login Failure Detected\n");
+                write(serial_fd, "L", 1);
+            }
+
             else if (strstr(lower_buffer, "syn")) {
                 printf("SYN Flood\n");
-                write(serial_fd, "S", 1);
+                write(serial_fd, "S2", 1);
             }
             else if (strstr(lower_buffer, "fin")) {
                 printf("FIN Flood\n");
-                write(serial_fd, "F", 1);
+                write(serial_fd, "F2", 1);
             }
             else if (strstr(lower_buffer, "rst")) {
                 printf("RST Flood\n");
                 write(serial_fd, "R", 1);
+            }
+
+            else if (strstr(lower_buffer, "select") || strstr(lower_buffer, "drop") || strstr(lower_buffer, "insert") || strstr(lower_buffer, "update")) {
+                printf("Possible SQL Injection\n");
+                write(serial_fd, "Q", 1);  // 'Q' for "Query"
+            } 
+            
+            else if (strstr(lower_buffer, "<script") || strstr(lower_buffer, "alert(") || strstr(lower_buffer, "onerror=")) {
+                printf("Possible XSS Attack\n");
+                write(serial_fd, "X", 1); 
+            } 
+            
+            else if (strstr(lower_buffer, "../") || strstr(lower_buffer, "/etc/passwd")) {
+                printf("Possible Directory Traversal/File Inclusion\n");
+                write(serial_fd, "U", 1); 
             }
 
             free(buffer);

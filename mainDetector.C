@@ -20,10 +20,10 @@ int main() {
     long bytes_to_read;
     int i;
 
-    // open the serial port
+    // open the serial port, these will be further upgrade after i obtained a simple Arduino board ^=^
     serial_fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_SYNC);
 
-    // configure serial port
+    // read serial ports
     tcgetattr(serial_fd, &tty);
     cfsetospeed(&tty, B9600);
     cfsetisspeed(&tty, B9600);
@@ -40,12 +40,18 @@ int main() {
     tty.c_cflag &= ~CRTSCTS;
     tcsetattr(serial_fd, TCSANOW, &tty);
 
+    // just left it here for the board to startup properly
     sleep(2);
+
+    // then again this is to tell the board that it should be ready
+    write(serial_fd, "READY\n", 6);
+    printf("The detector is up and running!\n");
 
     // get file size
     stat("/var/log/snort/alerts", &st);
     last_size = st.st_size;
-
+    
+    // test the inital ping
     write(serial_fd, "A", 1);
 
     while (1) {

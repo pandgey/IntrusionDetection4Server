@@ -20,13 +20,15 @@ int main() {
     long bytes_to_read;
     int i;
 
-    // open the serial port, these will be further upgrade after i obtained a simple Arduino board ^=^
+    // open the serial port, these will be further upgrade after i obtained an Arduino board ^=^
     serial_fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_SYNC);
 
-    // read serial ports
+    // get settings of the serial ports
     tcgetattr(serial_fd, &tty);
     cfsetospeed(&tty, B9600);
     cfsetisspeed(&tty, B9600);
+
+    // configure the inputs
     tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
     tty.c_iflag &= ~IGNBRK;
     tty.c_lflag = 0;
@@ -62,6 +64,7 @@ int main() {
         current_size = st.st_size;
 
         if (current_size > last_size) {
+
             //open file and seek to last position
             file = fopen("/var/log/snort/alerts", "r");
             fseek(file, last_size, SEEK_SET);
@@ -144,6 +147,7 @@ int main() {
                 write(serial_fd, "U", 1); 
             }
 
+            // free the memory space
             free(buffer);
             free(lower_buffer);
             last_size = current_size;

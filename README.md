@@ -1,3 +1,3 @@
 # This is my experimental server intrusion detection algorithm 
 
-ps. I will further improve the algorithm and makes it more efficient ;) using C so stay tune for that!
+hi!, i have already converted the algorithm to C. Feel free to play around and experiment with it. And of course, feel free to contribute!
